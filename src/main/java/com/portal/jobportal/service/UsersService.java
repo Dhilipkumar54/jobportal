@@ -53,6 +53,11 @@ public class UsersService {
         return savedUsers;
     }
 
+    public Users findUserByEmail(String currentUsername) {
+        return usersRepository.findByEmail(currentUsername).orElseThrow(() -> new UsernameNotFoundException("User not " +
+                "found"));
+    }
+
     public Optional<Users> findbyEmail(String email){
         return usersRepository.findByEmail(email);
     }

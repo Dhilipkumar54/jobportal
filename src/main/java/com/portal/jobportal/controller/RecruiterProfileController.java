@@ -64,21 +64,30 @@ public class RecruiterProfileController {
             recruiterProfile.setUserAccountId(user.getUserId());
         }
         model.addAttribute("profile",recruiterProfile);
+
+        //Handling file Upload
         String fileName = "";
 
+        //Checks if the uploaded file is not empty.
         if(!multipartFile.getOriginalFilename().equals("")){
+            //Extracts the file name and sanitizes it using StringUtils.cleanPath().
             fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
             recruiterProfile.setProfilePhoto(fileName);
         }
         RecruiterProfile savedProfile = recruiterProfileService.addNew(recruiterProfile);
+
+        //Creates a directory path where the uploaded image will be saved.
+        //The folder name is based on the user’s account ID to organize files properly.
         String uplodadDir = "photos/recruiter/"+ savedProfile.getUserAccountId();
 
         try{
+            //to save the image to the server.
             FileUploadUtil.saveFile(uplodadDir,fileName,multipartFile);
         }catch (Exception e){
+            //If an error occurs, prints the stack trace.
             e.printStackTrace();
         }
 
-        return "redirect:/dashboard";
+        return "redirect:/dashboard/";
     }
 }
